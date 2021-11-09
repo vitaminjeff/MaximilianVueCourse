@@ -38,6 +38,7 @@
 
 <script>
 export default {
+  emits: ['save-data'],
   data() {
     return {
       firstName: '',
@@ -48,18 +49,22 @@ export default {
     };
   },
   methods: {
-     submitForm() {
-        const formData = {
-           first: this.firstName,
-           last: this.lastName,
-           desc: this.description,
-           rate: this.rate,
-           areas: this.areas
-        };
+    submitForm() {
+      const formData = {
+        first: this.firstName,
+        last: this.lastName,
+        desc: this.description,
+        rate: this.rate,
+        areas: this.areas,
+      };
 
-        console.log(formData);
-     }
-  }
+      console.log(formData);
+
+      // don't reach out to vuex from down here, let the parent component do that
+
+      this.$emit('save-data', formData);
+    },
+  },
 };
 </script>
 
