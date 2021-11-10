@@ -11,7 +11,7 @@
             <h2>Interest? Reach out now!</h2>
             <base-button link :to="contactLink">Contact</base-button>
          </header>
-         <router-view>`</router-view>
+         <contact-coach></contact-coach>
       </base-card>
    </section>
    <section>
@@ -23,8 +23,13 @@
 </template>
 
 <script>
+import ContactCoach from '../../pages/requests/ContactCoach.vue';
+
 export default {
    props: ['id'],
+   components: {
+    ContactCoach
+  },
    data() {
       return {
          selectedCoach: null
