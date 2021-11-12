@@ -43,6 +43,9 @@ export default {
          coachId: this.$route.params.id // make sure to access params
       });
 
+      // extra practice, implement loading and error handling here
+      // see CoachesList.vue
+
       this.$router.replace('/coaches');
     },
   },
