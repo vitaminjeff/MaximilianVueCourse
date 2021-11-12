@@ -51,6 +51,10 @@ export default {
          coaches.push(coach);
       }
 
+      // fake delay
+      const delay = ms => new Promise(res => setTimeout(res, ms));
+      await delay(500);
+
       context.commit('setCoaches', coaches);
    }
 };
