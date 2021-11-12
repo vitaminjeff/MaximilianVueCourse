@@ -27,7 +27,11 @@ export default {
          id: userId
       });
    },
-   async loadCoaches(context) {
+   async loadCoaches(context, payload) {
+      if (!payload.forceRefresh && !context.getters.shouldUpdate) {
+         return;
+      }
+
       const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.json`);
 
       const responseData = await response.json();
@@ -58,5 +62,6 @@ export default {
       await delay(500);
 
       context.commit('setCoaches', coaches);
+      context.commit('setFetchTimestamp');
    }
 };

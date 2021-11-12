@@ -8,6 +8,7 @@ export default {
     return {
       // alternative way of determining if the user is already registered as a coach
       // userIsCoach: false,
+      lastFetch: null,
       coaches: [
         {
           id: 'c1',
