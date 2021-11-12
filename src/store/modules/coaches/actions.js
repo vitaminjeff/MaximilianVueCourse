@@ -28,12 +28,14 @@ export default {
       });
    },
    async loadCoaches(context) {
-      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.json`);
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.jso`);
 
       const responseData = await response.json();
 
       if (!response.ok) {
          // error ...
+         const error = new Error(responseData.message || 'Failed to fetch!');
+         throw error;
       }
 
       const coaches = [];
