@@ -7,7 +7,8 @@ export default {
       return {
          userId: null,
          token: null,
-         tokenExpiration: null
+         // tokenExpiration: null, // not needed in vuexst
+         didAutoLogout: false
       }
    },
    mutations,

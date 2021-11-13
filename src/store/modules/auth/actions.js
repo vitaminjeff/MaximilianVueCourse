@@ -39,8 +39,8 @@ export default {
          throw error;
       }
 
-      // const expiresIn = +responseData.expiresIn * 1000; // convert to ms
-      const expiresIn = 5000; // 5 sec test
+      const expiresIn = +responseData.expiresIn * 1000; // convert to ms
+      // const expiresIn = 5000; // 5 sec for testing
       const expirationDate = new Date().getTime() + expiresIn;
 
       // store stuff not just in vuex
@@ -50,7 +50,7 @@ export default {
       localStorage.setItem('tokenExpiration', expirationDate);
 
       timer = setTimeout(function() {
-         context.dispatch('logout');
+         context.dispatch('autoLogout');
       }, expiresIn);
 
       context.commit('setUser', {
@@ -74,7 +74,7 @@ export default {
       }
 
       timer = setTimeout(function() {
-         context.dispatch('logout');
+         context.dispatch('autoLogout');
       }, expiresIn);
 
       if (token && userId) {
@@ -97,6 +97,10 @@ export default {
          userId: null,
          // tokenExpiration: null, // don't need to store tokenExpiration in vuex anymore
       });
+   },
+   autoLogout(context) {
+      context.dispatch('logout');
+      context.commit('setAutoLogout');
    }
 };
 
