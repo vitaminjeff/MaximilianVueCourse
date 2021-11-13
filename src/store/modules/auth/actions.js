@@ -1,10 +1,27 @@
 export default {
    async login(context, payload) {
-      // https://firebase.google.com/docs/reference/rest/auth
-      const uri = `${process.env.VUE_APP_FIREBASE_ACCOUNTS_URL}:signInWithPassword?key=${process.env.VUE_APP_FIREBASE_API_KEY}`
-      console.log(uri);
+      context.dispatch('auth', {
+         ...payload,
+         mode: 'login'
+      })
+   },
+   async signup(context, payload) {
+      context.dispatch('auth', {
+         ...payload,
+         mode: 'signup'
+      })
+   },
+   async auth(context, payload) {
+      const mode = payload.mode;
 
-      const response = await fetch(uri, {
+      // https://firebase.google.com/docs/reference/rest/auth
+      let url = `${process.env.VUE_APP_FIREBASE_ACCOUNTS_URL}:signInWithPassword?key=${process.env.VUE_APP_FIREBASE_API_KEY}`;
+
+      if (mode === 'signup') {
+         url = `${process.env.VUE_APP_FIREBASE_ACCOUNTS_URL}:signUp?key=${process.env.VUE_APP_FIREBASE_API_KEY}`;
+      }
+
+      const response = await fetch(url, {
          method: 'POST',
          body: JSON.stringify({
             email: payload.email,
@@ -16,46 +33,34 @@ export default {
       const responseData = await response.json();
 
       if (!response.ok) {
-         console.log(responseData)
          const error = new Error(responseData.message || 'Failed to authenticate. Check your login data.');
          throw error;
       }
 
-      console.log(responseData);
+      // store stuff not just in vuex
+      // but also in some storage that survives page reloads, i.e. localStorage
+      localStorage.setItem('token', responseData.idToken);
+      localStorage.setItem('userId', responseData.localId);
+
       context.commit('setUser', {
          token: responseData.idToken,
          userId: responseData.localId,
          tokenExpiration: responseData.expiresIn
       });
    },
-   async signup(context, payload) {
-      // https://firebase.google.com/docs/reference/rest/auth
-      const uri = `${process.env.VUE_APP_FIREBASE_ACCOUNTS_URL}:signUp?key=${process.env.VUE_APP_FIREBASE_API_KEY}`
-      console.log(uri);
+   tryLogin(context) {
+      // get stuff not just from vuex
+      // but also from storage that survives page reloads, i.e. localStorage
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId');
 
-      const response = await fetch(uri, {
-         method: 'POST',
-         body: JSON.stringify({
-            email: payload.email,
-            password: payload.password,
-            returnSecureToken: true
-         })
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-         console.log(responseData)
-         const error = new Error(responseData.message || 'Failed to authenticate. Check your login data.');
-         throw error;
+      if (token && userId) {
+         context.commit('setUser', {
+            token: token,
+            userId: userId,
+            tokenExpiration: null
+         });
       }
-
-      console.log(responseData);
-      context.commit('setUser', {
-         token: responseData.idToken,
-         userId: responseData.localId,
-         tokenExpiration: responseData.expiresIn
-      });
    },
    logout(context) {
       context.commit('setUser', {
