@@ -59,16 +59,16 @@ body {
 }
 
 .route-enter-active {
-  transition: all 0.3 ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .route-leave-active {
-  transition: all 0.3 ease-in;
+  transition: all 0.3s ease-in;
 }
 
 .route-enter-to,
 .route-leave-from {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(0);
 }
 </style>

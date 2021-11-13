@@ -101,15 +101,15 @@ menu {
 .dialog-enter-from,
 .dialog-leave-to {
   opacity: 0;
-  transform: scale(0.5);
+  transform: scale(0.8);
 }
 
 .dialog-enter-active {
-  transition: all 0.3 ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .dialog-leave-active {
-  transition: all 0.3 ease-in;
+  transition: all 0.3s ease-in;
 }
 
 .dialog-enter-to,
