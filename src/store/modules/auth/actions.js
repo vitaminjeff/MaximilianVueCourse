@@ -1,3 +1,5 @@
+let timer;
+
 export default {
    async login(context, payload) {
       context.dispatch('auth', {
@@ -37,15 +39,24 @@ export default {
          throw error;
       }
 
+      // const expiresIn = +responseData.expiresIn * 1000; // convert to ms
+      const expiresIn = 5000; // 5 sec test
+      const expirationDate = new Date().getTime() + expiresIn;
+
       // store stuff not just in vuex
       // but also in some storage that survives page reloads, i.e. localStorage
       localStorage.setItem('token', responseData.idToken);
       localStorage.setItem('userId', responseData.localId);
+      localStorage.setItem('tokenExpiration', expirationDate);
+
+      timer = setTimeout(function() {
+         context.dispatch('logout');
+      }, expiresIn);
 
       context.commit('setUser', {
          token: responseData.idToken,
          userId: responseData.localId,
-         tokenExpiration: responseData.expiresIn
+         // tokenExpiration: responseData.expiresIn // only needed from localStorage
       });
    },
    tryLogin(context) {
@@ -53,20 +64,38 @@ export default {
       // but also from storage that survives page reloads, i.e. localStorage
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+      const tokenExpiration = localStorage.getItem('tokenExpiration');
+
+      const expiresIn = +tokenExpiration - new Date().getTime();
+
+      // if (expiresIn < 10000) // 10 sec
+      if (expiresIn < 10000) {
+         return;
+      }
+
+      timer = setTimeout(function() {
+         context.dispatch('logout');
+      }, expiresIn);
 
       if (token && userId) {
          context.commit('setUser', {
             token: token,
             userId: userId,
-            tokenExpiration: null
+            // tokenExpiration: null
          });
       }
    },
    logout(context) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('tokenExpiration');
+
+      clearTimeout(timer);
+
       context.commit('setUser', {
          token: null,
          userId: null,
-         tokenExpiration: null,
+         // tokenExpiration: null, // don't need to store tokenExpiration in vuex anymore
       });
    }
 };
