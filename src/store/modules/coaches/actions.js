@@ -32,7 +32,7 @@ export default {
          return;
       }
 
-      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.json`);
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.jso`);
 
       const responseData = await response.json();
 
@@ -58,8 +58,8 @@ export default {
       }
 
       // fake delay
-      const delay = ms => new Promise(res => setTimeout(res, ms));
-      await delay(500);
+      // const delay = ms => new Promise(res => setTimeout(res, ms));
+      // await delay(500);
 
       context.commit('setCoaches', coaches);
       context.commit('setFetchTimestamp');
