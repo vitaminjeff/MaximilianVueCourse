@@ -32,7 +32,7 @@ export default {
          return;
       }
 
-      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.jso`);
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/coaches.json`);
 
       const responseData = await response.json();
 
